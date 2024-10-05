@@ -1,12 +1,16 @@
-"use server";
 import { createUrlShortner } from "@/utils/server";
+import { Input } from "./ui/input";
 
 const Form = () => {
-
   return (
     <div className="mx-auto max-w-sm pt-1">
       <form action={createUrlShortner} className="flex flex-col gap-2">
-        <input type="url" name="url" className="rounded-md" />
+        {/* <input
+          type="url"
+          name="url"
+          className="rounded-md border-black "
+        /> */}
+        <Input type="url" name="url" autoFocus/>
         <input
           type="submit"
           value="create shortner"
