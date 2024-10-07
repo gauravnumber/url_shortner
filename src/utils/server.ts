@@ -7,8 +7,19 @@ import { redirect } from "next/navigation";
 
 export const createUrlShortner = async (formData: FormData) => {
   const url = formData.get("url") as string;
-  const slug = uuid(8);
-  
+  const customSlug = formData.get("custom-slug") as string;
+
+  const isCustomSlugExist = !!customSlug;
+  const slug = isCustomSlugExist ? customSlug : uuid(8);
+
+  const isCustomSlugExistOnDB = await prisma.url_lists.findFirst({
+    where: { slug: customSlug },
+  });
+
+  if (isCustomSlugExistOnDB) {
+    return { error: "Custom slug exist." };
+  }
+
   await prisma.url_lists.create({
     data: {
       url,
