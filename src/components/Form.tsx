@@ -19,7 +19,7 @@ import { useState, useTransition } from "react";
 const Form = () => {
   const [slug, setSlug] = useState("");
   const [isPending, startTransition] = useTransition();
-  
+
   const form = useForm<TFormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,17 +27,16 @@ const Form = () => {
       customSlug: "",
     },
   });
-  
+
   const onSubmit = async (data: TFormSchema) => {
     startTransition(async () => {
       const { error, slug: slugFromServer } = await createUrlShortner(data);
       if (error) {
         form.setError("customSlug", { type: "server", message: error });
-      }
-      if (slugFromServer) {
+      } else if (slugFromServer) {
         setSlug(slugFromServer);
+        form.reset();
       }
-      form.reset();
     });
   };
 
@@ -86,13 +85,11 @@ const Form = () => {
     </FormUi>
   );
 
-  const slugExist =(
-    <p>https://acort.vercel.app/{slug}</p>
-  )
+  const slugExist = <p>https://acort.vercel.app/{slug}</p>;
 
   return (
     <div className="mx-auto max-w-sm pt-1">
-      {!!slug ? slugExist : slugNotExist }
+      {!!slug ? slugExist : slugNotExist}
     </div>
   );
 };
